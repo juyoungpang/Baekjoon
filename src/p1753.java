@@ -55,7 +55,20 @@ public class p1753{
     }
 
     public void dijkstra(int start){
-        
+        PriorityQueue<Node> pq = new PriorityQueue<Node>();
+        dist[start] = 0;
+        pq.add(new Node(start,0));
+
+        while(!pq.isEmpty()){
+            Node cur = pq.poll();
+            if(cur.weight > dist[cur.id]) continue; //현재 weight가 dist에 저장된 weight보다 크면 갱신할 필요가 없다.
+            for(Node next:list[cur.id]){
+                if(dist[next.id]>(next.weight+cur.weight)){     //만약 dist에 저장된 next의 weight가 cur에서 next로가는 weight보다 크다면 갱신.  
+                    dist[next.id] = (next.weight+cur.weight);
+                    pq.add(next);
+                }
+            }
+        }
     }
   
 }
