@@ -52,9 +52,22 @@ public class p1753{
             w = Integer.parseInt(st.nextToken());
             list[u].add(new Node(v,w));
         }
+
+        //dijkstra
+        dijkstra(K);
+
+        //output
+        StringBuilder sb = new StringBuilder();
+        for(int i=1;i<V+1;i++){
+            if(dist[i]<Integer.MAX_VALUE) sb.append(dist[i]+"\n");
+            else sb.append("INF\n");
+        }
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
     }
 
-    public void dijkstra(int start){
+    private static void dijkstra(int start){
         PriorityQueue<Node> pq = new PriorityQueue<Node>();
         dist[start] = 0;
         pq.add(new Node(start,0));
