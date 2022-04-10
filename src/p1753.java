@@ -18,10 +18,6 @@ public class p1753{
             this.weight = weight;
         }
 
-        public String toString(){
-            return "("+id+","+weight+")";
-        }
-
         @Override
         public int compareTo(Node o){
             return weight - o.weight;
@@ -38,14 +34,16 @@ public class p1753{
 
         //거리배열 INF로 초기화
         dist = new int[V+1];    //거리배열
-        Arrays.fill(dist, Integer.MAX_VALUE);
+        for(int i=1;i<V+1;i++){
+            dist[i] = Integer.MAX_VALUE;
+        }
 
         //리스트 초기화
         list = new ArrayList[V+1];  //인접 정점 리스트
         for(int i=1;i<V+1;i++){
             list[i] = new ArrayList<>();
         }
-        for(int i=0;i<E;i++){
+        for(int i=1;i<E+1;i++){
             st = new StringTokenizer(br.readLine());
             u = Integer.parseInt(st.nextToken());
             v = Integer.parseInt(st.nextToken());
@@ -65,10 +63,11 @@ public class p1753{
         bw.write(sb.toString());
         bw.flush();
         bw.close();
+        br.close();
     }
 
     private static void dijkstra(int start){
-        PriorityQueue<Node> pq = new PriorityQueue<Node>();
+        PriorityQueue<Node> pq = new PriorityQueue<>();
         dist[start] = 0;
         pq.add(new Node(start,0));
 
@@ -76,9 +75,10 @@ public class p1753{
             Node cur = pq.poll();
             if(cur.weight > dist[cur.id]) continue; //현재 weight가 dist에 저장된 weight보다 크면 갱신할 필요가 없다.
             for(Node next:list[cur.id]){
-                if(dist[next.id]>(next.weight+cur.weight)){     //만약 dist에 저장된 next의 weight가 cur에서 next로가는 weight보다 크다면 갱신.  
-                    dist[next.id] = (next.weight+cur.weight);
-                    pq.add(next);
+                int nextW = next.weight+cur.weight;
+                if(dist[next.id]>nextW){     //만약 dist에 저장된 next의 weight가 cur에서 next로가는 weight보다 크다면 갱신.  
+                    dist[next.id] = nextW;
+                    pq.add(new Node(next.id, dist[next.id]));
                 }
             }
         }
