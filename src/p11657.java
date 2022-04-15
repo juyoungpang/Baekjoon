@@ -69,10 +69,15 @@ public class p11657 {
 
     private static boolean bellmanFord(){
         dist[1] = 0;
+        //repeat for N-1 times
         for(int i=1;i<N;i++){
+            //check dist[1]~dist[N]
             for(int j=1;j<N+1;j++){
+                //for all Paths in list[j]
                 for(Path cur:list[j]){
+                    //if dist[j] was explored
                     if(dist[j]!=INF){
+                        //compare the current distance and distance that passes through node j
                         if(dist[cur.end]>(dist[j]+cur.weight)){
                             dist[cur.end] = (dist[j]+cur.weight);
                         }
@@ -81,6 +86,8 @@ public class p11657 {
             }
         }
 
+        //check once more for a change
+        //If there is a change in dist, it means there's a negative cycle
         for(int i=1;i<N+1;i++){
             for(Path p : list[i]){
                 if(dist[i]!=INF && dist[p.end]>(dist[i]+p.weight)) return true;
