@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class p11404 {
+public class p11404 { 
     static BufferedReader br;
     static BufferedWriter bw;
 
