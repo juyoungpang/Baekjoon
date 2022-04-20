@@ -1,3 +1,6 @@
+//selection sort
+
+package sorting;
 import java.io.*;
 import java.util.*;
 

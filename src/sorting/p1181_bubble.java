@@ -1,3 +1,6 @@
+//bubble sort
+
+package sorting;
 import java.io.*;
 
 public class p1181_bubble{
