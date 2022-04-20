@@ -1,4 +1,5 @@
 //bubble sort
+//wrong due to time out but keeping for studying purpose
 
 package sorting;
 import java.io.*;
