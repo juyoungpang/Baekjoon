@@ -27,7 +27,7 @@ public class p2178_bfs{
             }
         }
 
-        Queue<Point>queue = new LinkedList<>();
+        Queue<Point> queue = new LinkedList<>();
         queue.add(new Point(0,0,1));
         map[0][0]=0;
         int ret=0;
@@ -66,7 +66,5 @@ public class p2178_bfs{
             this.col = col;
             this.d = d;
         }
-
-
     }    
 }
