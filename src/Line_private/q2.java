@@ -1,8 +1,10 @@
+package Line_private;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
-class Solution {
+class q2 {
     public static void main(String[] args){
         int n = 6;
         int[] times = {1,2,3};
