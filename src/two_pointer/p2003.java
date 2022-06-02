@@ -10,7 +10,7 @@ public class p2003 {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer tok;
 
-        int N, M, count=0;
+        int N, M;
         int[] arr;
 
         tok = new StringTokenizer(br.readLine());
