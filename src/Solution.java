@@ -4,9 +4,8 @@ import java.util.Queue;
 
 class Solution {
     public static void main(String[] args){
-        int n = 6;
-        int[] times = {1,2,3};
-        System.out.println(solution(n, times));
+        int[][] v = {{1,4},{3,4},{3,10}};
+        System.out.println(toString(solution(v)));
     }
 
     /*public static int solution(int n, int[] times) {
@@ -31,24 +30,57 @@ class Solution {
         return minTime;
     }*/
 
-    public static int solution(int n, int[] times) {
-        int visited[] = new int[n+1];
-        Queue<Integer> queue = new LinkedList<>();
-        Arrays.fill(visited,0);
-        queue.offer(1);
-        while(!queue.isEmpty()) {
-            int current = queue.poll();
+//     public static int solution(int n, int[] times) {
+//         int visited[] = new int[n+1];
+//         Queue<Integer> queue = new LinkedList<>();
+//         Arrays.fill(visited,0);
+//         queue.offer(1);
+//         while(!queue.isEmpty()) {
+//             int current = queue.poll();
 
-            for(int i=0;i<times.length;i++) {
-                int numStrings = current+(i+1);
-                int time = visited[current]+times[i];
-                if(numStrings==n) return time;
+//             for(int i=0;i<times.length;i++) {
+//                 int numStrings = current+(i+1);
+//                 int time = visited[current]+times[i];
+//                 if(numStrings==n) return time;
 
-                if(numStrings<n && visited[numStrings]==0) {
-                    visited[numStrings] = time;
-                }
-            }
+//                 if(numStrings<n && visited[numStrings]==0) {
+//                     visited[numStrings] = time;
+//                 }
+//             }
+//         }
+//         return -1;
+//     }
+
+    public static String toString(int[] arr) {
+        String s = "";
+        for(int i:arr) s+=i+" ";
+        return s;
+    }
+
+    public static int[] solution(int[][] v) {
+        int[] answer = new int[2];
+
+        int x1 = -1, x2 = -1;
+        int y1 = -1, y2 = -1;
+
+        for(int[] point:v) {
+            int x = point[0];
+            int y = point[1];
+
+            if(x1 == -1) x1 = x;
+            else if(x1 == x) x1 = -1;
+            else if(x2 == -1) x2 = x;
+            else x2 = -1;
+
+            if(y1 == -1) y1 = y;
+            else if(y1 == y) y1 = -1;
+            else if(y2 == -1) y2 = y;
+            else y2 = -1;
         }
-        return -1;
+
+        answer[0] = x1!=-1?x1:x2;
+        answer[1] = y1!=-1?y1:y2;
+
+        return answer;
     }
 }
