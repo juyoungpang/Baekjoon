@@ -9,7 +9,7 @@ public class g4_14500 {
 	static boolean[][] visited;
 	static int max = Integer.MIN_VALUE;
 	static int N, M;
-	
+
 	static int[] dr = { -1, 1, 0, 0 };
 	static int[] dc = { 0, 0, -1, 1 };
 
@@ -31,15 +31,14 @@ public class g4_14500 {
 		}
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++) {
-                visited[i][j] = true;
+				visited[i][j] = true;
 				combi(i, j, map[i][j], 1);
-                visited[i][j] = false;
+				visited[i][j] = false;
 			}
 		}
 
-		
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		bw.write(max+"\n");
+		bw.write(max + "\n");
 		bw.flush();
 		bw.close();
 		br.close();
@@ -51,7 +50,6 @@ public class g4_14500 {
 			return;
 		}
 
-
 		for (int i = 0; i < 4; i++) {
 			int newR = row + dr[i];
 			int newC = col + dc[i];
@@ -62,12 +60,12 @@ public class g4_14500 {
 			if (!visited[newR][newC]) {
 				if (depth == 2) {
 					visited[newR][newC] = true;
-					combi(row, col, sum+map[newR][newC], depth + 1);
+					combi(row, col, sum + map[newR][newC], depth + 1);
 					visited[newR][newC] = false;
 				}
-				
+
 				visited[newR][newC] = true;
-				combi(newR, newC, sum+map[newR][newC], depth+1);
+				combi(newR, newC, sum + map[newR][newC], depth + 1);
 				visited[newR][newC] = false;
 			}
 		}
