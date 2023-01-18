@@ -1,6 +1,6 @@
 //counting sort
 
-package sorting;
+package B1;
 import java.io.*;
 import java.util.*;
 
