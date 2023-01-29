@@ -1,41 +1,51 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
-	static int n = 0;
-	static int number;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		number = sc.nextInt();
-		while (number != 0) {
-			n = 0;
-			int depth = 1;
-			while (n != number) {
-				dfs(0, 0, depth++, new boolean[10]);
+	static int min = Integer.MAX_VALUE;
+	static double[][] position = new double[4][2];
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+				
+		for(int i=0;i<4;i++) {
+			StringTokenizer tok = new StringTokenizer(br.readLine());
+			position[i][0] = Double.parseDouble(tok.nextToken());
+			position[i][1] = Double.parseDouble(tok.nextToken());
+		}
+		
+		permu(0, new boolean[4], new int[3]);
+		
+		System.out.println(min);
+	}
+
+	public static void permu(int depth, boolean[] visited, int[] order) {
+		if(depth==3) {
+			int curPos = 0;
+			double totalDist = 0;
+			for(int p:order) {
+				totalDist += dist(position[curPos][0],position[curPos][1],position[p][0],position[p][1]);
+				curPos = p;
 			}
-
-			number = sc.nextInt();
+			min = Math.min(min, (int) totalDist);
+			return;
+		}
+		
+		for(int i=1;i<=3;i++) {
+			if(!visited[i]) {
+				visited[i]=true;
+				order[depth] = i;
+				permu(depth+1, visited, order);
+				visited[i]=false;
+			}
 		}
 	}
 
-	public static void dfs(int num, int curDepth, int depth, boolean[] visited) {
-		if (n == number) {
-			return;
-		}
-		if (curDepth == depth) {
-			n++;
-			if (n == number) {
-				System.out.println(num);
-				return;
-			}
-		}
-
-		for (int i = curDepth == 0 ? 1 : 0; i < visited.length; i++) {
-			if (!visited[i]) {
-				visited[i] = true;
-				dfs(num*10 + i, curDepth + 1, depth, visited);
-				visited[i] = false;
-			}
-		}
+	public static double dist(double r1, double c1, double r2, double c2) {
+		return Math.sqrt(Math.pow(r1 - r2, 2.0) + Math.pow(c1 - c2, 2.0));
 	}
 }
