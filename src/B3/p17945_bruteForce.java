@@ -1,6 +1,7 @@
+package B3;
 import java.util.Scanner;
 
-public class Main {
+public class p17945_bruteForce {
 	static int A, B;
 	static boolean found;
 	

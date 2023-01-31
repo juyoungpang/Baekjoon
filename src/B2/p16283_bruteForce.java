@@ -12,7 +12,7 @@ public class p16283_bruteForce {
 		int sheep = 1;
 		int goat = n - 1;
 		int count = 0;
-
+ 
 		int ansS = 0;
 		int ansG = 0;
 
