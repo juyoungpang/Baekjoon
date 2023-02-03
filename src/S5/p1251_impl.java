@@ -6,7 +6,7 @@ public class p1251_impl {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String str = sc.next();
-        String ans = Character.toString('z'+1);
+        String ans = Character.toString((char)('z'+1));
 
         for(int i=1;i<str.length()-1;i++) {
             for(int j=i+1;j<str.length();j++) {
