@@ -1,30 +1,56 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.StringTokenizer;
 
 public class Main {
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		int K = sc.nextInt();
-		
-		int[] arr = new int[N];
-		for(int i=0;i<N;i++) {
-			arr[i] = sc.nextInt();
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		Point[] board = new Point[N];
+
+		for (int n = 0; n < N; n++) {
+			StringTokenizer tok = new StringTokenizer(br.readLine());
+			board[n] = new Point(Integer.parseInt(tok.nextToken()),Integer.parseInt(tok.nextToken()));
 		}
 		
-		// first sum
-		int sum = 0;
-		for(int i=0;i<K;i++) {
-			sum+=arr[i];
-		}
+		Arrays.sort(board, new Comparator<Point>() {
+
+			@Override
+			public int compare(Point o1, Point o2) {
+				// TODO Auto-generated method stub
+				return o1.x-o2.x;
+			}
+		});
 		
-		int max = sum;
-		for(int i=K;i<N;i++) {
-			sum+=arr[i];
-			sum-=arr[i-K];
+		int midX = board[N/2].x;
+		
+		Arrays.sort(board, new Comparator<Point>() {
 			
-			max = Math.max(sum, max);
+			@Override
+			public int compare(Point o1, Point o2) {
+				// TODO Auto-generated method stub
+				return o1.y-o2.y;
+			}
+		});
+		
+		int midY = board[N/2].y;
+		
+		for(Point p:board) {
+			System.out.print(Math.abs(midX-p.x)+Math.abs(midY-p.y)+" ");
 		}
 		
-		System.out.println(max);
+
+	}
+}
+
+class Point {
+	int x, y;
+
+	public Point(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 }
