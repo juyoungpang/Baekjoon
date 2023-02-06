@@ -1,57 +1,31 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.StringTokenizer;
+import java.util.Scanner;
 
-// 1090 풀어볼것
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(br.readLine());
-		Point[] board = new Point[N];
 
-		for (int n = 0; n < N; n++) {
-			StringTokenizer tok = new StringTokenizer(br.readLine());
-			board[n] = new Point(Integer.parseInt(tok.nextToken()),Integer.parseInt(tok.nextToken()));
-		}
-		
-		Arrays.sort(board, new Comparator<Point>() {
+	static String[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+	static int[] ds = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-			@Override
-			public int compare(Point o1, Point o2) {
-				// TODO Auto-generated method stub
-				return o1.x-o2.x;
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int D = sc.nextInt();
+		int M = sc.nextInt();
+
+		int day = 3;
+
+		int d = 1;
+		int m = 1;
+
+		while (m<M) {
+			day = (day + m) % 7;
+			d++;
+
+			if ((d == 29 && m == 2) || (d == 30 && (m == 4 || m == 6 || m == 9 || m == 11))
+					|| (d == 31 && (m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12))) {
+				m++;
+				d = 1;
 			}
-		});
-		
-		int midX = board[N/2].x;
-		
-		Arrays.sort(board, new Comparator<Point>() {
-			
-			@Override
-			public int compare(Point o1, Point o2) {
-				// TODO Auto-generated method stub
-				return o1.y-o2.y;
-			}
-		});
-		
-		int midY = board[N/2].y;
-		
-		for(Point p:board) {
-			System.out.print(Math.abs(midX-p.x)+Math.abs(midY-p.y)+" ");
 		}
-		
 
-	}
-}
-
-class Point {
-	int x, y;
-
-	public Point(int x, int y) {
-		this.x = x;
-		this.y = y;
+		System.out.println(days[day]);
 	}
 }
