@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 public class 계란깨기 {
 	static int N, answer = 0;
 	static int[] eggS, eggW; // 내구도, 무게
+	static boolean[] cracked;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -26,31 +27,49 @@ public class 계란깨기 {
 
 		System.out.println(answer);
 	}
+	
+	public static void crack(int e1, int e2) {
+		eggS[e1]-=eggW[e2];
+		eggS[e2]-=eggW[e1];
+	}
+	
+	public static void unCrack(int e1, int e2) {
+		eggS[e1]+=eggW[e2];
+		eggS[e2]+=eggW[e1];
+	}
 
 	public static void permu(int depth, int[] chosen) {
+		cracked = new boolean[N];
+		
 		if (depth == N) {
 			int num = 0;
-			int[] tempS = eggS.clone();
 
 			for (int i = 0; i < N; i++) {
 				if (num >= N - 1) // 깰 계란이 없는 경우
 					break;
 
-				if (tempS[chosen[i]] <= 0) // 깨려고 한 계란이 이미 깨진 경우
+				int toCrack = chosen[i];
+				int cracking = i;
+				
+				if (cracked[toCrack]) // 깨려고 한 계란이 이미 깨진 경우
 					return;
 
-				if (tempS[i] <= 0) // 이미 계란이 깨진 경우
+				if (cracked[cracking]) // 이미 계란이 깨진 경우
 					continue;
 
-				tempS[chosen[i]] -= eggW[i];
-				tempS[i] -= eggW[chosen[i]];
-
-				if (tempS[chosen[i]] <= 0) {
+				crack(toCrack, cracking);
+				
+				if(eggS[toCrack] <= 0) {
 					num++;
+					cracked[toCrack] = true;
 				}
-				if (tempS[i] <= 0) {
+				
+				if(eggS[cracking] <= 0) {
 					num++;
+					cracked[cracking] = true;
 				}
+				
+				unCrack(toCrack, cracking);
 			}
 
 			answer = Math.max(answer, num);
