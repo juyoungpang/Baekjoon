@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class MyMain {
+public class 계란깨기 {
 	static int N, answer = 0;
 	static int[] eggS, eggW; // 내구도, 무게
 
-//	public static void main(String[] args) throws IOException {
-	public static int main() throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader("test_case.txt"));
-//		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		N = Integer.parseInt(br.readLine());
 
@@ -26,8 +24,7 @@ public class MyMain {
 
 		permu(0, new int[N]);
 
-//		System.out.println(answer);
-		return answer;
+		System.out.println(answer);
 	}
 
 	public static void permu(int depth, int[] chosen) {
