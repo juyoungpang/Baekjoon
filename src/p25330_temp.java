@@ -4,9 +4,8 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-//25330
-public class Main2 {
-	static int N, K, answer, maxDepth;
+public class p25330_temp {
+	static int N, K, answer;
 	static int[] A, P;
 	static boolean[] visited;
 
@@ -30,20 +29,9 @@ public class Main2 {
 		for (int i = 0; i < N; i++) {
 			P[i] = Integer.parseInt(tok.nextToken());
 		}
+		
+		Arrays.sort(A);
 
-		int[] sortedA = A.clone();
-		Arrays.sort(sortedA);
-		
-		int montemp = 0;
-		for(int i=0;i<N;i++) {
-			if(K >= sortedA[i] + 2*montemp) {
-				maxDepth++;
-				montemp = montemp+sortedA[i];
-			} else {
-				break;
-			}
-		}
-		
 		permu(0, 0, K);
 
 		System.out.println(answer);
@@ -51,10 +39,9 @@ public class Main2 {
 	}
 
 	public static void permu(int depth, int p, int k) {
-		if (k < 0 || depth > maxDepth) {
-			return;
-		} else {
+		if (k == 0 || depth == N) {
 			answer = Math.max(answer, p);
+			return;
 		}
 
 		for (int i = 0; i < N; i++) {

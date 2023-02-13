@@ -1,51 +1,52 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Main {
-	static int N, K, R,answer;
-	static int[] A,P;
+	static Set<Integer>[] rows = new Set[9];
+	static Set<Integer>[] cols = new Set[9];
+	static Set<Integer>[] box = new Set[9];
+	
+	static int[][] board = new int[9][9];
+	
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer tok = new StringTokenizer(br.readLine());
-
-		N = Integer.parseInt(tok.nextToken());
-		K = Integer.parseInt(tok.nextToken());
-
-		A = new int[N];
-		tok = new StringTokenizer(br.readLine());
-		for (int i = 0; i < N; i++) {
-			A[i] = Integer.parseInt(tok.nextToken());
-		}
-
-		P = new int[N];
-		tok = new StringTokenizer(br.readLine());
-		for (int i = 0; i < N; i++) {
-			P[i] = Integer.parseInt(tok.nextToken());
-		}
-
-		for(R=1;R<=N;R++) {
-			permutation(0,0,0,0);
+		for(int i=0;i<10;i++) {
+			rows[i] = new HashSet<>();
+			cols[i] = new HashSet<>();
+			box[i] = new HashSet<>();
 		}
 		
-		System.out.println(answer);
+		int startR = -1;
+		int startC = -1;
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		for(int i=0;i<9;i++) {
+			String row = br.readLine();
+			for(int j=0;j<9;j++) {
+				board[i][j] = row.charAt(j)-'0';
+				rows[i].add(board[i][j]);
+				cols[j].add(board[i][j]);
+				box[getBox(i,j)].add(board[i][j]);
+				
+				if(startR==-1 && board[i][j]==0) {
+					startR = i;
+					startC = j;
+				}
+			}
+		}
+		
+		run(startR, startC);
+		
+		
 	}
 	
-	public static void permutation(int depth, int flag, int damage, int people) {
-		if(depth==R) {
-			answer = Math.max(answer, people);
-			return;
-		}
+	public static void run(int row, int col) {
 		
-		for(int i=0;i<N;i++) {
-			if((flag & i<<i) != 0) continue;
-			
-			int newdamage = damage*2+A[i];
-			if(newdamage>K) {
-				continue;
-			}
-			permutation(depth+1, flag|1<<i, newdamage, people+P[i]);
-		}
+	}
+	
+	public static int getBox(int row, int col) {
+		return row/3+col/3;
 	}
 }
