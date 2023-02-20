@@ -4,77 +4,123 @@ import java.util.*;
 import java.io.*;
 
 public class p14503_impl {
-    static BufferedReader br;
-    static StringTokenizer tok;
 
-    static final int[] moveLeft = {-1,-1,1,1}; //col,row,col,row
-    static final int[] moveBack = {1,-1,-1,1}; //row,col,row,col
+	static int N, M, initRow, initCol, initD, count;
+	static int[][] map;
+	static Robot robot;
 
-    static int N, M, r, c, d;
-    static int[][] map;
-    static boolean[][] visited;
+	static final int NORTH = 0;
+	static final int EAST = 1;
+	static final int SOUTH = 2;
+	static final int WEST = 3;
 
-    public static void main(String[] args) throws IOException{
-        br = new BufferedReader(new InputStreamReader(System.in));
-        tok = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(tok.nextToken());
-        M = Integer.parseInt(tok.nextToken());
-        map = new int[N][M];
-        visited = new boolean[N][M];
+	static final int WALL = 1;
+	static final int NOTCLEANED = 0;
+	static final int CLEANED = -1;
+	
+	static final int FORWARD = -1;
+	static final int BACKWARD = 1;
 
-        tok = new StringTokenizer(br.readLine());
-        r = Integer.parseInt(tok.nextToken());
-        c = Integer.parseInt(tok.nextToken());
-        d = Integer.parseInt(tok.nextToken());
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer tok = new StringTokenizer(br.readLine());
 
-        for(int i=0;i<N;i++){
-            tok = new StringTokenizer(br.readLine());
-            for(int j=0;j<M;j++){
-                map[i][j] = Integer.parseInt(tok.nextToken());
-                if(map[i][j]==1) visited[i][j] = true;
-                else visited[i][j] = false;
-            }
-        }
+		N = Integer.parseInt(tok.nextToken());
+		M = Integer.parseInt(tok.nextToken());
 
-        int count = 1;
-        while(true){
-            boolean moved = false;
-            for(int i=0;i<4;i++){
-                moved = move(0);
-                if(moved) {
-                    count++;
-                    break;
-                }
-            }
-            if(!moved) {
-                if(!move(1)) break;
-                else count++;
-            }
-        }
+		tok = new StringTokenizer(br.readLine());
+		initRow = Integer.parseInt(tok.nextToken());
+		initCol = Integer.parseInt(tok.nextToken());
+		initD = Integer.parseInt(tok.nextToken());
 
-        System.out.println(count);
-        
-    }
+		map = new int[N][M];
+		for (int i = 0; i < N; i++) {
+			tok = new StringTokenizer(br.readLine());
+			for (int j = 0; j < M; j++) {
+				map[i][j] = Integer.parseInt(tok.nextToken());
+			}
+		}
+		/*----입력 란----*/
 
-    public static boolean move(int leftOrBack){
-        int[] moveArr = (leftOrBack==0)?moveLeft:moveBack;
-        if(d%2==0){
-            if(isValid(1, c+moveArr[d]) && !visited[r][c+moveArr[d]]){
-                c = c+moveArr[d];
-                return true;
-            }
-        }
-        else{
-            if(isValid(0, r+moveArr[d]) && !visited[r+moveArr[d]][c]){
-                r = r+moveArr[d];
-                return true;
-            }
-        }
-        if(leftOrBack==0) d = (d!=0)?d-1:3;
-        return false;
-    }
+		robot = new Robot(initRow,initCol,initD);
+		map[initRow][initCol] = CLEANED;
+		count = 1;
+		
+		simulate();
+		
+		System.out.println(count);
+		
+		br.close();
+	}
+	
+	public static void simulate() {
+		for(int i=0;i<4;i++) {
+			if(robot.onLeft()==NOTCLEANED) {
+				robot.rotate();
+				robot.step(FORWARD);
+				map[robot.r][robot.c]= CLEANED; 
+				count++;
+				i=-1;
+			} else {
+				robot.rotate();
+			}
+		}
+		
+		robot.rotate();
+		if(robot.onLeft()==WALL) {
+			for(int i=0;i<3;i++) robot.rotate();
+		} else {
+			for(int i=0;i<3;i++) robot.rotate();
+			robot.step(BACKWARD);
+			simulate();
+		}
+	}
+	
 
-    public static boolean isValid(int rowOrCol, int val){
-        return val>0 && val<((rowOrCol==0)?N:M);
-    }
+	public static class Robot {
+		int r;
+		int c;
+		int d;
+
+		public Robot(int r, int c, int d) {
+			this.r = r;
+			this.c = c;
+			this.d = d;
+		}
+
+		public void rotate() {
+			d = (d+3)%4;
+		}
+
+		//forward면 -1, backward면 +1
+		public void step(int s) {
+			switch (d) {
+			case NORTH:
+				r+=s;
+				break;
+			case WEST:
+				c+=s;
+				break;
+			case SOUTH:
+				r-=s;
+				break;
+			default:
+				c-=s;
+				break;
+			}
+		}
+		
+		public int onLeft() {
+			switch (d) {
+			case NORTH:
+				return map[r][c-1];
+			case WEST:
+				return map[r+1][c];
+			case SOUTH:
+				return map[r][c+1];
+			default:
+				return map[r-1][c];
+			}
+		}
+	}
 }
