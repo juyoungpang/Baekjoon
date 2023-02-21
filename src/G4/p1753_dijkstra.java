@@ -5,8 +5,8 @@ import java.util.*;
 import java.io.*;
 
 public class p1753_dijkstra{
-    static BufferedReader br;
-    static BufferedWriter bw;
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringTokenizer tok;
 
     static int V,E,K;
     static int u,v,w;
@@ -26,20 +26,22 @@ public class p1753_dijkstra{
             return weight - o.weight;
         }
     }
-    public static void main(String[] args) throws IOException{
-        br = new BufferedReader(new InputStreamReader(System.in));
-        bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        V = Integer.parseInt(st.nextToken());   //정점 개수
-        E = Integer.parseInt(st.nextToken());   //간선 개수
-        K = Integer.parseInt(br.readLine());    //시작 정점
+	public static int nextInt() throws IOException {
+		if (tok == null || !tok.hasMoreElements())
+			tok = new StringTokenizer(br.readLine());
+		return Integer.parseInt(tok.nextToken());
+	}
+    
+    public static void main(String[] args) throws IOException{
+        V = nextInt();   //정점 개수
+        E = nextInt();   //간선 개수
+        K = nextInt();   //시작 정점
 
         //거리배열 INF로 초기화
         dist = new int[V+1];    //거리배열
-        for(int i=1;i<V+1;i++){
-            dist[i] = Integer.MAX_VALUE;
-        }
+        Arrays.fill(dist, Integer.MAX_VALUE);
 
         //리스트 초기화
         list = new ArrayList[V+1];  //인접 정점 리스트
@@ -47,10 +49,9 @@ public class p1753_dijkstra{
             list[i] = new ArrayList<>();
         }
         for(int i=1;i<E+1;i++){
-            st = new StringTokenizer(br.readLine());
-            u = Integer.parseInt(st.nextToken());
-            v = Integer.parseInt(st.nextToken());
-            w = Integer.parseInt(st.nextToken());
+            u = nextInt();
+            v = nextInt();
+            w = nextInt();
             list[u].add(new Node(v,w));
         }
 
@@ -63,10 +64,7 @@ public class p1753_dijkstra{
             if(dist[i]<Integer.MAX_VALUE) sb.append(dist[i]+"\n");
             else sb.append("INF\n");
         }
-        bw.write(sb.toString());
-        bw.flush();
-        bw.close();
-        br.close();
+        System.out.println(sb.toString());
     }
 
     private static void dijkstra(int start){

@@ -3,52 +3,53 @@ package S2;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class p11724_dfs {
-    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static int N, M;
+	static boolean[][] adj;
+	static boolean[] visited;
+	static StringTokenizer tok;
+	static BufferedReader br;
 
-    static int N,M,count;
-    static int[][] map;
-    static int[] visited;
+	public static void main(String[] args) throws IOException {
+		br = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void main(String[] args) throws IOException {
-        StringTokenizer tok = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(tok.nextToken());
-        M = Integer.parseInt(tok.nextToken());
-        map = new int[N][N];
-        visited = new int[N];
-        Arrays.fill(visited, 0);
-        for(int[] row:map){
-            Arrays.fill(row, 0);
-        }
-        count = 0;
+		N = nextInt();
+		M = nextInt();
 
-        for(int i=0;i<M;i++) {
-            tok = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(tok.nextToken())-1;
-            int b = Integer.parseInt(tok.nextToken())-1;
+		adj = new boolean[N][N];
+		visited = new boolean[N];
+		for (int m = 0; m < M; m++) {
+			int a = nextInt() - 1;
+			int b = nextInt() - 1;
+			adj[a][b] = true;
+			adj[b][a] = true;
+		}
 
-            map[a][b] = map[b][a] = 1;
-        }
+		int count = 0;
+		for (int i = 0; i < N; i++) {
+			if (!visited[i]) {
+				count++;
+				dfs(i);
+			}
+		}
+		System.out.println(count);
+	}
 
-        for(int i=0;i<N;i++) {
-            if(visited[i]==0) {
-                dfs(i);
-                count++;
-            }
-        }
+	public static void dfs(int row) {
+		visited[row] = true;
 
-        System.out.println(count);
-    }
+		for (int i = 0; i < N; i++) {
+			if (visited[i] || !adj[row][i])
+				continue;
+			dfs(i);
+		}
+	}
 
-    private static void dfs(int node) {
-        visited[node] = 1;
-        for(int i=0;i<N;i++) {
-            if(map[node][i]==1 && visited[i]==0) {
-                dfs(i);
-            }
-        }
-    }
+	public static int nextInt() throws IOException {
+		if (tok == null || !tok.hasMoreElements())
+			tok = new StringTokenizer(br.readLine());
+		return Integer.parseInt(tok.nextToken());
+	}
 }
