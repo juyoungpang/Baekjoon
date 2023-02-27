@@ -4,16 +4,14 @@ import java.io.*;
 import java.util.*;
 
 public class p1260_bfsdfs {
-    static BufferedReader br;
-
-    static Queue<Integer> bfs;
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringBuilder sb = new StringBuilder();
 
     static int n,m,v;
     static int[][] graph;
     static int[] visited;
 
     public static void main(String[] args) throws IOException {
-        br = new BufferedReader(new InputStreamReader(System.in));
 
         StringTokenizer tok = new StringTokenizer(br.readLine());
         n = Integer.parseInt(tok.nextToken());
@@ -21,13 +19,6 @@ public class p1260_bfsdfs {
         v = Integer.parseInt(tok.nextToken());
 
         graph = new int[n+1][n+1];
-        for(int i=0;i<n+1;i++){
-            Arrays.fill(graph[i],0);
-        }
-        visited = new int[n+1];
-        Arrays.fill(visited,0);
-        visited[v] = 1;
-
         for(int i=0;i<m;i++){
             tok = new StringTokenizer(br.readLine());
             int a = Integer.parseInt(tok.nextToken());
@@ -36,17 +27,21 @@ public class p1260_bfsdfs {
             graph[a][b] = graph[b][a] = 1;
         }
 
-        dfs(v);
-        System.out.println();
-
-        Arrays.fill(visited,0);
+        visited = new int[n+1];
         visited[v] = 1;
+        dfs(v);
+        
+        sb.append("\n");
 
+        visited = new int[n+1];
+        visited[v] = 1;
         bfs();
+        
+        System.out.println(sb.toString());
     }
 
     public static void dfs(int current){
-        System.out.print(current+" ");
+    	sb.append(current).append(" ");
 
         for(int j=1;j<n+1;j++){
             if(current!=j && graph[current][j]==1 && visited[j]==0){
@@ -57,12 +52,12 @@ public class p1260_bfsdfs {
     }
 
     public static void bfs(){
-        bfs = new LinkedList<Integer>();
+        Queue<Integer> bfs = new LinkedList<Integer>();
         bfs.offer(v);
 
         while(!bfs.isEmpty()){
             int current = bfs.poll();
-            System.out.print(current+" ");
+            sb.append(current).append(" ");
 
             for(int j=1;j<n+1;j++){
                 if(current!=j && graph[current][j]==1 && visited[j]==0){
