@@ -1,56 +1,71 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int[] dr = {-1,1,0,0};
-	static int[] dc = {0,0,-1,1};
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static StringTokenizer st;
+
+	static int[] population, connection;
+	static int N, answer = Integer.MAX_VALUE, totalPopulation;
+
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
+		N = nextInt();
+		population = new int[N];
+		connection = new int[N];
+
+		for (int i = 0; i < N; i++) {
+			population[i] = nextInt();
+			totalPopulation += population[i];
+		}
+
+		for (int i = 0; i < N; i++) {
+			int n = nextInt();
+			int conn = 0;
+			while (n-- > 0) {
+				conn |= (1 << (nextInt() - 1));
+			}
+//			conn |= (1 << i);
+			connection[i] = conn;
+		}
+
+		int chosen = 1;
+		while (chosen < (1 << N) - 1) {
+			p = 0;
+			if (checkConnected(chosen)) {
+				answer = Math.min(answer, Math.abs(p-(totalPopulation-p)));
+			}
+
+			chosen++;
+		}
 		
-		boolean[][] map = new boolean[N][M];
-		boolean[][] visited = new boolean[N][M];
-		for(int i=0;i<N;i++) {
-			String temp = br.readLine();
-			for(int j=0;j<M;j++) {
-				map[i][j] = temp.charAt(j)=='0'?true:false;
+		if(answer==Integer.MAX_VALUE)
+			System.out.println(-1);
+		else
+			System.out.println(answer);
+	}
+
+	static int p;
+
+	public static boolean checkConnected(int conn) {
+		int flag1 = 0;
+		int flag2 = 0;
+		for (int i = 0; i < N; i++) {
+			if ((conn & (1 << i)) != 0) {
+				p += population[i];
+				flag1 |= connection[i];
+			} else {
+				flag2 |= connection[i];
 			}
 		}
 		
-		Queue<int[]> q = new LinkedList<>();
-		q.offer(new int[] {0,0,1,0});
-		while(!q.isEmpty()) {
-			int[] point = q.poll(); // r, c, dist, wallBroken
-			visited[point[0]][point[1]] = true;
-			
-			if(point[0]==N-1 && point[1]==M-1) {
-				System.out.println(point[2]);
-				return;
-			}
-			
-			for(int i=0;i<4;i++) {
-				int newR = point[0] + dr[i];
-				int newC = point[1] + dc[i];
-				
-				if(newR<0 || newR>=N || newC<0 || newC>=M || visited[newR][newC]) {
-					continue;
-				}
-				
-				if(!map[newR][newC]) { // 못가는 벽이라도 만약 부술수 있으면 넣음
-					if(point[3]==0) {
-						q.offer(new int[] {newR, newC, point[2]+1, point[3]+1});
-					}
-				} else {
-					q.offer(new int[] {newR, newC, point[2]+1, point[3]});
-				}
-			}
-		}
-		System.out.println(-1);
+		return conn == (conn & flag1) && ((~conn)&((1<<N)-1)) == (~conn & flag2);
+	}
+
+	public static int nextInt() throws IOException {
+		if (st == null || !st.hasMoreElements())
+			st = new StringTokenizer(br.readLine());
+		return Integer.parseInt(st.nextToken());
 	}
 }
