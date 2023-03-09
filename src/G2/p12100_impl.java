@@ -1,210 +1,168 @@
 package G2;
-
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class p12100_impl {
-	
-	static int max = -1;
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static StringTokenizer st;
+
+	static int N, max;
 
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		int N = Integer.parseInt(br.readLine());
-		int[][] map = new int[N][N];
-		
-		for(int i=0;i<map.length;i++) {
-			StringTokenizer tok = new StringTokenizer(br.readLine());
-			for(int j=0;j<map[0].length;j++) {
-				map[i][j] = Integer.parseInt(tok.nextToken());
+		N = nextInt();
+		int[][] board = new int[N][N];
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				board[i][j] = nextInt();
+				max = Math.max(board[i][j], max);
 			}
 		}
-//		run(new Board(map),0);
-		
-		Board board = new Board(map);
-		board.right();
-		System.out.println(board.print());
-		
-//		System.out.println(max);
+
+		run(0, board);
+
+		System.out.println(max);
 	}
-	
-	public static void run(Board b, int level) {
-		if(level==1||level==2) System.out.println("=====================\nLevel: "+level);
-		if(level==1||level==2) System.out.println(b.print());
-		
-		if(level<5) {
-			for(int i=0;i<4;i++) {
-				Board tempBoard = new Board(b.map, b.max);
-				if(i==0) {
-					tempBoard.up();
-					run(tempBoard,level+1);
-				}
-				else if(i==1) {
-					tempBoard.down();
-					run(tempBoard,level+1);
-				}
-				else if(i==2) {
-					tempBoard.left();
-					run(tempBoard,level+1);
-				}
-				else {
-					tempBoard.right();
-					run(tempBoard,level+1);
-				}
+
+	public static void run(int depth, int[][] board) {
+		if (depth == 5) {
+			return;
+		}
+
+		run(depth + 1, up(copyArr(board)));
+		run(depth + 1, down(copyArr(board)));
+		run(depth + 1, left(copyArr(board)));
+		run(depth + 1, right(copyArr(board)));
+	}
+
+	static Queue<Integer> inQ, outQ;
+
+	public static void queueing() {
+		outQ = new LinkedList<>();
+
+		while (!inQ.isEmpty()) {
+			int curNum = inQ.poll();
+			if (!inQ.isEmpty() && inQ.peek() == curNum) {
+				int newNum = curNum+inQ.poll();
+				outQ.offer(newNum);
+				max = Math.max(max, newNum);
+			} else {
+				outQ.offer(curNum);
 			}
-		} else {
-			if(b.max>max) max = b.max;
 		}
 	}
-	
-	public static class Board{
-		static int[][] map;
-		static int max;
-		
-		public Board(int[][] map) {
-			this.map = map;
-			max = -1;
-			
-			for(int i=0;i<map.length;i++) {
-				for(int j=0;j<map[0].length;j++) {
-					if(map[i][j]>max) max = map[i][j];
-				}
-			}
-		}
-		
-		public Board(int[][] map, int max) {
-			this.map = map;
-			this.max = max;
-		}
-		
-		public static void up() {
-//			System.out.println("up");
-			for(int c=0;c<map[0].length;c++) {
-				int val = map[0][c];
-				int row = 0;
-				for(int r=1;r<map.length;r++) {
-					if(map[r][c]!=0) {
-						if(val == 0) {
-							map[row][c] = map[r][c];
-							map[r][c] = 0;
-							row++;
-							
-						} else if (val == map[r][c]) {
-							map[row][c] *= 2;
-							map[r][c] = 0;
-							row++;
-						} else {
-							row++;
-							map[row][c] = map[r][c];
-							if(row!=r) map[r][c] = 0;
-						}
-						val = map[row][c];
-						if(val>max) max = val;
-					}
+
+	public static int[][] up(int[][] board) {
+		inQ = new LinkedList<>();
+
+		for (int c = 0; c < N; c++) {
+			for (int r = 0; r < N; r++) {
+				if (board[r][c] != 0) {
+					inQ.offer(board[r][c]);
+					board[r][c] = 0;
 				}
 			}
 
-//			System.out.println(print());
+			queueing();
+
+			for (int r = 0; r < N; r++) {
+				if (outQ.isEmpty())
+					break;
+
+				board[r][c] = outQ.poll();
+			}
 		}
-		
-		public static void left() {
-//			System.out.println("left");
-			for(int r=0;r<map.length;r++) {
-				int val = map[r][0];
-				int col = 0;
-				for(int c=1;c<map.length;c++) {
-					if(map[r][c]!=0) {
-						if(val == 0) {
-							map[r][col] = map[r][c];
-							map[r][c] = 0;
-							col++;
-						} else if (val == map[r][c]) {
-							map[r][col] *= 2;
-							map[r][c] = 0;
-							col++;
-						} else {
-							col++;
-							map[r][col] = map[r][c];
-							if(col!=c) map[r][c] = 0;
-						}
-						val = map[r][col];
-						if(val>max) max = val;
-					}
+
+		return board;
+	}
+
+	public static int[][] down(int[][] board) {
+		inQ = new LinkedList<>();
+
+		for (int c = 0; c < N; c++) {
+			for (int r = N - 1; r >= 0; r--) {
+				if (board[r][c] != 0) {
+					inQ.offer(board[r][c]);
+					board[r][c] = 0;
 				}
 			}
 
-//			System.out.println(print());
+			queueing();
+
+			for (int r = N - 1; r >= 0; r--) {
+				if (outQ.isEmpty())
+					break;
+
+				board[r][c] = outQ.poll();
+			}
 		}
-		
-		public static void down() {
-//			System.out.println("down");
-			for(int c=0;c<map[0].length;c++) {
-				int val = map[map.length-1][c];
-				int row = map.length-1;
-				for(int r=map.length-2;r>=0;r--) {
-					if(map[r][c]!=0) {
-						if(val == 0) {
-							map[row][c] = map[r][c];
-							map[r][c] = 0;
-							row--;
-						} else if (val == map[r][c]) {
-							map[row][c] *= 2;
-							map[r][c] = 0;
-							row--;
-						} else {
-							row--;
-							map[row][c] = map[r][c];
-							if(row!=r) map[r][c] = 0;
-						}
-						val = map[row][c];
-						if(val>max) max = val;
-					}
+
+		return board;
+	}
+
+	public static int[][] left(int[][] board) {
+		inQ = new LinkedList<>();
+
+		for (int r = 0; r < N; r++) {
+			for (int c = 0; c < N; c++) {
+				if (board[r][c] != 0) {
+					inQ.offer(board[r][c]);
+					board[r][c] = 0;
 				}
 			}
 
-//			System.out.println(print());
+			queueing();
+
+			for (int c = 0; c < N; c++) {
+				if (outQ.isEmpty())
+					break;
+
+				board[r][c] = outQ.poll();
+			}
 		}
-			
-		public static void right() {
-//			System.out.println("right");
-			for(int r=0;r<map.length;r++) {
-				int val = map[r][map[0].length-1];
-				int col = map[0].length-1;
-				for(int c=map[0].length-2;c>=0;c--) {
-					if(map[r][c]!=0) {
-						if(val == 0) {
-							map[r][col] = map[r][c];
-							map[r][c] = 0;
-							col--;
-						} else if (val == map[r][c]) {
-							map[r][col] *= 2;
-							map[r][c] = 0;
-							col--;
-						} else {
-							col--;
-							map[r][col] = map[r][c];
-							if(col!=c) map[r][c] = 0;
-						}
-						val = map[r][col];
-						if(val>max) max = val;
-					}
+
+		return board;
+	}
+
+	public static int[][] right(int[][] board) {
+		inQ = new LinkedList<>();
+
+		for (int r = 0; r < N; r++) {
+			for (int c = N - 1; c >= 0; c--) {
+				if (board[r][c] != 0) {
+					inQ.offer(board[r][c]);
+					board[r][c] = 0;
 				}
 			}
 
-//			System.out.println(print());
-		}
-		
-		public static String print() {
-			StringBuilder sb = new StringBuilder();
-			sb.append("MAX: ").append(max).append("\n");
-			for(int i=0;i<map.length;i++) {
-				for(int j=0;j<map[0].length;j++) {
-					sb.append(map[i][j]).append(" ");
-				}
-				sb.append("\n");
+			queueing();
+
+			for (int c = N - 1; c >= 0; c--) {
+				if (outQ.isEmpty())
+					break;
+
+				board[r][c] = outQ.poll();
 			}
-			return sb.toString();
 		}
+
+		return board;
+	}
+
+	public static int[][] copyArr(int[][] arr) {
+		int[][] newArr = new int[arr.length][];
+		for (int i = 0; i < arr.length; i++) {
+			newArr[i] = arr[i].clone();
+		}
+		return newArr;
+	}
+
+	public static int nextInt() throws IOException {
+		if (st == null || !st.hasMoreElements())
+			st = new StringTokenizer(br.readLine());
+		return Integer.parseInt(st.nextToken());
 	}
 
 }
